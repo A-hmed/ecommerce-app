@@ -4,7 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'core/routes_manager/route_generator.dart';
 
+/// Widget -> ViewModel - UseCase - Repo - DataSource
+/// ViewModel(UseCase(Repo(DataSource))) -> DI
+///
 void main() {
+  //configureDependencies();
   runApp(const MainApp());
 }
 

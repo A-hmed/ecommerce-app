@@ -4,6 +4,10 @@ class AppConstants {
   static const String delete = "Delete";
   static const String searchHint = "what do you search for?";
   static const String addToCart = "Add to Cart";
+  static const String defaultErrorMessage =
+      "Something went wrong please try again";
+  static const String internetErrorMessage =
+      "Please check your internet connection and try again later";
 
   static List<Map<String, dynamic>> favoriteProducts = [
     {
