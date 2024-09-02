@@ -1,26 +1,20 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecommerce_app/core/resources/assets_manager.dart';
 import 'package:ecommerce_app/core/resources/color_manager.dart';
 import 'package:ecommerce_app/core/resources/styles_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../features/main_layout/domain/model/product.dart';
+
 class ProductCard extends StatelessWidget {
-  final String image;
-  final String title;
-  final double price;
-  final String description;
-  final double priceBeforeDiscound;
-  final double rating;
+  final Product product;
 
   const ProductCard({
     super.key,
-    required this.image,
-    required this.title,
-    required this.price,
-    required this.rating,
-    required this.priceBeforeDiscound,
-    required this.description,
+    required this.product,
   });
+
   String truncateTitle(String title) {
     List<String> words = title.split(' ');
     if (words.length <= 4) {
@@ -50,27 +44,6 @@ class ProductCard extends StatelessWidget {
         ),
         child: Column(
           children: [
-            // Expanded(
-            //   flex: 1,
-            //   child: ClipRRect(
-            //     borderRadius: const BorderRadius.only(
-            //       topLeft: Radius.circular(24),
-            //       topRight: Radius.circular(24),
-            //     ),
-            //     child: AspectRatio(
-            //       aspectRatio: 16 / 9,
-            //       child: CachedNetworkImage(
-            //         imageUrl: product.imageCover ?? "",
-            //         fit: BoxFit.fill,
-            //         placeholder: (context, url) =>
-            //             const Center(child: CircularProgressIndicator()),
-            //         errorWidget: (context, url, error) =>
-            //             const Center(child: Icon(Icons.error)),
-            //       ),
-            //     ),
-            //   ),
-            // ),
-
             Expanded(
               flex: 1,
               child: Stack(
@@ -85,9 +58,24 @@ class ProductCard extends StatelessWidget {
                       ),
                       child: AspectRatio(
                         aspectRatio: 16 / 9,
-                        child: Image.asset(
-                          image,
+                        child: CachedNetworkImage(
+                          imageUrl: product.image,
                           fit: BoxFit.cover,
+                          placeholder: (context, url) =>
+                              const Center(child: CircularProgressIndicator()),
+                          errorWidget: (context, url, error) =>
+                              const Center(child: Icon(Icons.error)),
+                          imageBuilder: (context, imageProvider) {
+                            return Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  image: imageProvider,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ),
@@ -130,7 +118,8 @@ class ProductCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      truncateTitle(title),
+                      truncateTitle(product.title),
+                      maxLines: 1,
                       style: getMediumStyle(
                         color: ColorManager.primary,
                         fontSize: 16.sp,
@@ -138,7 +127,8 @@ class ProductCard extends StatelessWidget {
                     ),
                     SizedBox(height: 8.h),
                     Text(
-                      truncateTitle(description),
+                      truncateTitle(product.description),
+                      maxLines: 2,
                       style: getRegularStyle(
                         color: ColorManager.primary,
                         fontSize: 14.sp,
@@ -149,7 +139,7 @@ class ProductCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "EGP $price",
+                          "EGP ${product.price}",
                           softWrap: true,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -159,7 +149,7 @@ class ProductCard extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "$priceBeforeDiscound EGP ",
+                          "${product.priceBeforeDiscount} EGP",
                           style: getTextWithLine(),
                         ),
                       ],
@@ -178,7 +168,7 @@ class ProductCard extends StatelessWidget {
                             ),
                             SizedBox(width: 4.w),
                             Text(
-                              "$rating",
+                              "${product.rating}",
                               style: getRegularStyle(
                                 color: ColorManager.primary,
                                 fontSize: 14.sp,
