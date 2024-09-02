@@ -3,13 +3,12 @@ import 'package:ecommerce_app/core/resources/color_manager.dart';
 import 'package:ecommerce_app/core/resources/values_manager.dart';
 import 'package:ecommerce_app/core/routes_manager/routes.dart';
 import 'package:ecommerce_app/core/utils/base_api_state.dart';
-import 'package:ecommerce_app/core/utils/dio_utils.dart';
+import 'package:ecommerce_app/core/utils/dialog_utils.dart';
 import 'package:ecommerce_app/core/widget/custom_elevated_button.dart';
 import 'package:ecommerce_app/core/widget/main_text_field.dart';
 import 'package:ecommerce_app/core/widget/validators.dart';
-import 'package:ecommerce_app/features/auth/data/repos/online_datasource_impl.dart';
-import 'package:ecommerce_app/features/auth/domain/usecases/login_usecase.dart';
 import 'package:ecommerce_app/features/auth/presentation/screens/sign_in/sign_in_viewmodel.dart';
+import 'package:ecommerce_app/features/di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,8 +17,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../../../core/resources/font_manager.dart';
 import '../../../../../core/resources/styles_manager.dart';
-import '../../../data/repos/auth_repo_impl.dart';
 
+// Widget -> ViewModels -> UseCase(optional) -> Repo -> DataSource
 class SignInScreen extends StatefulWidget {
   SignInScreen({super.key});
 
@@ -42,8 +41,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   final TextEditingController password = TextEditingController();
 
-  SignInViewModel signInViewModel = SignInViewModel(
-      LoginUseCase(AuthRepoImpl(OnlineDataSourceImpl(DioUtils()))));
+  SignInViewModel signInViewModel = getIt();
 
   @override
   Widget build(BuildContext context) {
@@ -52,40 +50,17 @@ class _SignInScreenState extends State<SignInScreen> {
       body: BlocListener<SignInViewModel, SignInViewModelState>(
         bloc: signInViewModel,
         listener: (context, state) {
-          if (state is BaseSuccessState) {
+          if (state.loginState is BaseSuccessState) {
+            hideLoading(context);
             Navigator.pushNamed(context, Routes.mainRoute);
-          } else if (state is BaseErrorState) {
-            Widget toast = Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25.0),
-                color: Colors.greenAccent,
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.check),
-                  SizedBox(
-                    width: 12.0,
-                  ),
-                  Text("This is a Custom Toast"),
-                ],
-              ),
-            );
-            fToast.showToast(
-                child: toast,
-                toastDuration: Duration(seconds: 2),
-                positionedToastBuilder: (context, child) {
-                  return Positioned(
-                    child: child,
-                    top: 16.0,
-                    left: 16.0,
-                  );
-                });
-          } else {
-            ///
-            print("Show loading ");
+          } else if (state.loginState is BaseErrorState) {
+            hideLoading(context);
+            showMessage(context,
+                title: "Error",
+                body: (state.loginState as BaseErrorState).failure.errorMessage,
+                posButtonTitle: "ok");
+          } else if (state.loginState is BaseLoadingState) {
+            showLoading(context);
           }
         },
         child: SafeArea(

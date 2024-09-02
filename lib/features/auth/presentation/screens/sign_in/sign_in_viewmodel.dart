@@ -3,7 +3,9 @@ import 'package:ecommerce_app/core/utils/base_api_state.dart';
 import 'package:ecommerce_app/features/auth/domain/usecases/login_usecase.dart';
 import 'package:either_dart/either.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
+@injectable
 class SignInViewModel extends Cubit<SignInViewModelState> {
   LoginUseCase loginUseCase;
 
@@ -13,11 +15,11 @@ class SignInViewModel extends Cubit<SignInViewModelState> {
     emit(SignInViewModelState(BaseLoadingState()));
     Either<Failure, void> response =
         await loginUseCase.execute(email, password);
-    response.fold((failure) {
-      emit(SignInViewModelState(BaseErrorState(failure.errorMessage)));
-    }, (_) {
+    if (response.isLeft) {
+      emit(SignInViewModelState(BaseErrorState(response.left)));
+    } else {
       emit(SignInViewModelState(BaseSuccessState(null)));
-    });
+    }
   }
 }
 

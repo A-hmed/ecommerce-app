@@ -1,3 +1,5 @@
+import 'package:ecommerce_app/core/utils/app_error.dart';
+
 abstract class BaseApiState {}
 
 class BaseIdleState extends BaseApiState {}
@@ -11,7 +13,7 @@ class BaseSuccessState<T> extends BaseApiState {
 }
 
 class BaseErrorState extends BaseApiState {
-  String errorMessage;
+  Failure failure;
 
-  BaseErrorState(this.errorMessage);
+  BaseErrorState(this.failure);
 }

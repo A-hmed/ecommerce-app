@@ -26,6 +26,7 @@ dependencies:
   internet_connection_checker: ^2.0.0
   flutter_bloc: ^8.1.6
   fluttertoast: ^8.2.5
+  shared_preferences: ^2.3.2
 
 
 dev_dependencies:

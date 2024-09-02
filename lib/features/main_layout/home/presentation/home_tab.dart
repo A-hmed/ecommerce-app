@@ -1,9 +1,11 @@
 import 'dart:async';
+
 import 'package:ecommerce_app/features/main_layout/home/presentation/widgets/custom_category_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/resources/assets_manager.dart';
+import '../../../../core/widget/product_card.dart';
 import 'widgets/custom_ads_widget.dart';
 import 'widgets/custom_section_bar.dart';
 
@@ -49,29 +51,13 @@ class _HomeTabState extends State<HomeTab> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          CustomAdsWidget(
-            adsImages: adsImages,
-            currentIndex: _currentIndex,
-            timer: _timer,
-          ),
+          buildAds(),
           Column(
             children: [
               CustomSectionBar(sectionNname: 'Categories', function: () {}),
-              SizedBox(
-                height: 270.h,
-                child: GridView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return const CustomCategoryWidget();
-                  },
-                  itemCount: 20,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                  ),
-                ),
-              ),
-              // SizedBox(height: 12.h),
-              // CustomSectionBar(sectionNname: 'Brands', function: () {}),
+              buildCategoriesGridView(),
+              SizedBox(height: 12.h),
+              //CustomSectionBar(sectionNname: 'Brands', function: () {}),
               // SizedBox(
               //   height: 270.h,
               //   child: GridView.builder(
@@ -85,35 +71,59 @@ class _HomeTabState extends State<HomeTab> {
               //     ),
               //   ),
               // ),
-              // CustomSectionBar(
-              //   sectionNname: 'Most Selling Products',
-              //   function: () {},
-              // ),
-              // SizedBox(
-              //   child: SizedBox(
-              //     height: 360.h,
-              //     child: ListView.builder(
-              //       scrollDirection: Axis.horizontal,
-              //       itemBuilder: (context, index) {
-              //         return const ProductCard(
-              //           title: "Nike Air Jordon",
-              //           description:
-              //               "Nike is a multinational corporation that designs, develops, and sells athletic footwear ,apparel, and accessories",
-              //           rating: 4.5,
-              //           price: 1100,
-              //           priceBeforeDiscound: 1500,
-              //           image: ImageAssets.categoryHomeImage,
-              //         );
-              //       },
-              //       itemCount: 20,
-              //     ),
-              //   ),
-              // ),
+              CustomSectionBar(
+                sectionNname: 'Most Selling Products',
+                function: () {},
+              ),
+              SizedBox(
+                child: SizedBox(
+                  height: 360.h,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      return const ProductCard(
+                        title: "Nike Air Jordon",
+                        description:
+                            "Nike is a multinational corporation that designs, develops, and sells athletic footwear ,apparel, and accessories",
+                        rating: 4.5,
+                        price: 1100,
+                        priceBeforeDiscound: 1500,
+                        image: ImageAssets.categoryHomeImage,
+                      );
+                    },
+                    itemCount: 20,
+                  ),
+                ),
+              ),
               SizedBox(height: 12.h),
             ],
           )
         ],
       ),
+    );
+  }
+
+  SizedBox buildCategoriesGridView() {
+    return SizedBox(
+      height: 270.h,
+      child: GridView.builder(
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, index) {
+          return const CustomCategoryWidget();
+        },
+        itemCount: 20,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+        ),
+      ),
+    );
+  }
+
+  CustomAdsWidget buildAds() {
+    return CustomAdsWidget(
+      adsImages: adsImages,
+      currentIndex: _currentIndex,
+      timer: _timer,
     );
   }
 }
