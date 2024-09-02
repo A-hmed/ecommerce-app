@@ -1,6 +1,6 @@
 import 'package:ecommerce_app/core/routes_manager/routes.dart';
-import 'package:ecommerce_app/features/auth/presentation/screens/sign_in_screen.dart';
-import 'package:ecommerce_app/features/auth/presentation/screens/sign_up_screen.dart';
+import 'package:ecommerce_app/features/auth/presentation/screens/sign_in/sign_in_screen.dart';
+import 'package:ecommerce_app/features/auth/presentation/screens/sign_up/sign_up_screen.dart';
 import 'package:ecommerce_app/features/cart/screens/cart_screen.dart';
 import 'package:ecommerce_app/features/main_layout/main_layout.dart';
 import 'package:ecommerce_app/features/product_details/presentation/screen/product_details.dart';

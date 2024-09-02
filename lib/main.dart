@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'core/routes_manager/route_generator.dart';
+import 'di/di.dart';
 
 void main() {
+  configureDependencies();
   runApp(const MainApp());
 }
 

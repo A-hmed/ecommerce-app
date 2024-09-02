@@ -19,11 +19,19 @@ dependencies:
   flutter_native_splash:
   readmore:
   smooth_page_indicator:
+  flutter_bloc: ^8.1.6
+  injectable: ^2.3.5
+  get_it: ^7.6.7
+  internet_connection_checker: ^1.0.0+1
+  dio: ^5.6.0
+  either_dart: ^1.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints:
+  injectable_generator: ^2.4.2
+  build_runner: ^2.4.9
 
 flutter:
   generate: true
