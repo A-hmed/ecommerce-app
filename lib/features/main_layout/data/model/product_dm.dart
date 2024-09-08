@@ -27,7 +27,7 @@ class ProductDM {
     if (json['subcategory'] != null) {
       subcategory = [];
       json['subcategory'].forEach((v) {
-        subcategory?.add(SubCategory.fromJson(v));
+        subcategory?.add(SubCategoryDM.fromJson(v));
       });
     }
     ratingsQuantity = json['ratingsQuantity'];
@@ -48,7 +48,7 @@ class ProductDM {
 
   num? sold;
   List<String>? images;
-  List<SubCategory>? subcategory;
+  List<SubCategoryDM>? subcategory;
   num? ratingsQuantity;
   String? id;
   String? title;
@@ -66,7 +66,7 @@ class ProductDM {
   ProductDM copyWith({
     num? sold,
     List<String>? images,
-    List<SubCategory>? subcategory,
+    List<SubCategoryDM>? subcategory,
     num? ratingsQuantity,
     String? id,
     String? title,

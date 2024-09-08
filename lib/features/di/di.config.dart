@@ -30,10 +30,16 @@ import '../main_layout/domain/mappers/cateogry_mapper.dart' as _i419;
 import '../main_layout/domain/mappers/product_mapper.dart' as _i300;
 import '../main_layout/domain/repository/home_repository.dart' as _i639;
 import '../main_layout/domain/usecases/categories_usecase.dart' as _i289;
+import '../main_layout/domain/usecases/get_products_by_category_usecase.dart'
+as _i951;
+import '../main_layout/domain/usecases/get_sub_categories_by_category.dart'
+as _i371;
 import '../main_layout/domain/usecases/most_selling_products_usecase.dart'
     as _i231;
 import '../main_layout/ui/home/presentation/home_cubit/home_cubit.dart'
     as _i1069;
+import '../products_screen/presentation/screens/cubit/products_cubit.dart'
+as _i940;
 import '../utils/dio_utils.dart' as _i427;
 import '../utils/shared_pref_utils.dart' as _i299;
 import 'network_module.dart' as _i567;
@@ -79,10 +85,17 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i289.GetCategoriesUseCase(gh<_i639.HomeRepository>()));
     gh.factory<_i231.MostSellingProductsUseCase>(
         () => _i231.MostSellingProductsUseCase(gh<_i639.HomeRepository>()));
+    gh.factory<_i371.GetSubCategoriesByCategory>(
+        () => _i371.GetSubCategoriesByCategory(gh<_i639.HomeRepository>()));
+    gh.factory<_i951.GetProductsByCategoryUseCase>(
+        () => _i951.GetProductsByCategoryUseCase(gh<_i639.HomeRepository>()));
     gh.factory<_i1069.HomeCubit>(() => _i1069.HomeCubit(
           gh<_i289.GetCategoriesUseCase>(),
           gh<_i231.MostSellingProductsUseCase>(),
+          gh<_i371.GetSubCategoriesByCategory>(),
         ));
+    gh.factory<_i940.ProductsCubit>(
+        () => _i940.ProductsCubit(gh<_i951.GetProductsByCategoryUseCase>()));
     return this;
   }
 }

@@ -1,6 +1,11 @@
 import 'package:ecommerce_app/core/resources/color_manager.dart';
 import 'package:ecommerce_app/core/resources/values_manager.dart';
+import 'package:ecommerce_app/core/utils/base_api_state.dart';
+import 'package:ecommerce_app/features/main_layout/domain/model/category.dart';
+import 'package:ecommerce_app/features/main_layout/ui/home/presentation/home_cubit/home_cubit.dart';
+import 'package:ecommerce_app/features/main_layout/ui/home/presentation/home_cubit/home_cubit_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'category_item.dart';
 
@@ -17,6 +22,26 @@ class _CategoriesListState extends State<CategoriesList> {
 
   @override
   Widget build(BuildContext context) {
+    return BlocBuilder<HomeCubit, HomeCubitState>(
+      buildWhen: (oldState, newState) {
+        return oldState.categoriesApi != newState.categoriesApi;
+      },
+      builder: (context, state) {
+        if (state.categoriesApi is BaseSuccessState) {
+          BaseSuccessState<List<Category>> successState =
+              state.categoriesApi as BaseSuccessState<List<Category>>;
+          return buildCategoriesList(successState.data);
+        } else if (state.categoriesApi is BaseErrorState) {
+          BaseErrorState errorState = state.categoriesApi as BaseErrorState;
+          return ErrorWidget(errorState.failure.errorMessage);
+        } else {
+          return const CircularProgressIndicator();
+        }
+      },
+    );
+  }
+
+  Expanded buildCategoriesList(List<Category> categories) {
     return Expanded(
         child: Container(
       decoration: BoxDecoration(
@@ -46,16 +71,18 @@ class _CategoriesListState extends State<CategoriesList> {
           bottomLeft: Radius.circular(AppSize.s12),
         ),
         child: ListView.builder(
-          itemCount: 20,
-          itemBuilder: (context, index) => CategoryItem(index,
-              "Laptops & Electronics", selectedIndex == index, onItemClick),
+          itemCount: categories.length,
+          itemBuilder: (context, index) => CategoryItem(
+              index, categories[index], selectedIndex == index, onItemClick),
         ),
       ),
     ));
   }
 
   // callback function to change the selected index
-  onItemClick(int index) {
+  onItemClick(int index, Category category) {
+    HomeCubit cubit = BlocProvider.of(context);
+    cubit.loadSubCategories(category.id!);
     setState(() {
       selectedIndex = index;
     });

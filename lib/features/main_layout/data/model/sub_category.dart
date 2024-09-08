@@ -1,12 +1,12 @@
-class SubCategory {
-  SubCategory({
+class SubCategoryDM {
+  SubCategoryDM({
     this.id,
     this.name,
     this.slug,
     this.category,
   });
 
-  SubCategory.fromJson(dynamic json) {
+  SubCategoryDM.fromJson(dynamic json) {
     id = json['_id'];
     name = json['name'];
     slug = json['slug'];
@@ -18,13 +18,13 @@ class SubCategory {
   String? slug;
   String? category;
 
-  SubCategory copyWith({
+  SubCategoryDM copyWith({
     String? id,
     String? name,
     String? slug,
     String? category,
   }) =>
-      SubCategory(
+      SubCategoryDM(
         id: id ?? this.id,
         name: name ?? this.name,
         slug: slug ?? this.slug,

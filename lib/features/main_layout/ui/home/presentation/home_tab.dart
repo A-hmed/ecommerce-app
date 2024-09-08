@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:ecommerce_app/core/resources/assets_manager.dart';
 import 'package:ecommerce_app/core/utils/base_api_state.dart';
 import 'package:ecommerce_app/core/widget/product_card.dart';
-import 'package:ecommerce_app/features/di/di.dart';
 import 'package:ecommerce_app/features/main_layout/domain/model/category.dart';
 import 'package:ecommerce_app/features/main_layout/domain/model/product.dart';
 import 'package:ecommerce_app/features/main_layout/ui/home/presentation/home_cubit/home_cubit.dart';
@@ -24,7 +23,7 @@ class HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<HomeTab> {
-  HomeCubit cubit = getIt();
+  late HomeCubit cubit = BlocProvider.of(context);
   int _currentIndex = 0;
   late Timer _timer;
 
@@ -37,8 +36,6 @@ class _HomeTabState extends State<HomeTab> {
   @override
   void initState() {
     super.initState();
-    cubit.loadProducts();
-    cubit.loadCategories();
     _startImageSwitching();
   }
 
@@ -96,7 +93,6 @@ class _HomeTabState extends State<HomeTab> {
 
   Widget buildProductsListView() {
     return BlocBuilder<HomeCubit, HomeCubitState>(
-      bloc: cubit,
       builder: (context, state) {
         if (state.productsApi is BaseSuccessState) {
           List<Product> product =
@@ -127,7 +123,6 @@ class _HomeTabState extends State<HomeTab> {
 
   Widget buildCategoriesGridView() {
     return BlocBuilder<HomeCubit, HomeCubitState>(
-      bloc: cubit,
       builder: (context, state) {
         if (state.categoriesApi is BaseSuccessState) {
           List<Category> categories =

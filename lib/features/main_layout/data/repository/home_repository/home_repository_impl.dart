@@ -2,6 +2,7 @@ import 'package:ecommerce_app/core/resources/constants_manager.dart';
 import 'package:ecommerce_app/core/utils/app_error.dart';
 import 'package:ecommerce_app/features/main_layout/data/model/category_dm.dart';
 import 'package:ecommerce_app/features/main_layout/data/model/product_dm.dart';
+import 'package:ecommerce_app/features/main_layout/data/model/sub_category.dart';
 import 'package:ecommerce_app/features/main_layout/data/repository/home_repository/data_sources/home_remote_data_source.dart';
 import 'package:ecommerce_app/features/main_layout/domain/mappers/cateogry_mapper.dart';
 import 'package:ecommerce_app/features/main_layout/domain/mappers/product_mapper.dart';
@@ -51,6 +52,46 @@ class HomeRepositoryImpl extends HomeRepository {
         for (ProductDM item in either.right) {
           print("title, ${item.title}");
         }
+        return Right(either.right
+            .map((productDm) => productMapper.toProduct(productDm))
+            .toList());
+      } else {
+        return Left(either.left);
+      }
+    } else {
+      return Left(ConnectionFailure(AppConstants.internetErrorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Category>>> loadSubCategory(
+      String categoryId) async {
+    bool isConnected = await internetConnectionChecker.hasConnection;
+    if (isConnected) {
+      Either<Failure, List<SubCategoryDM>> either =
+          await homeRemoteDataSource.loadSubCategories(categoryId);
+      if (either.isRight) {
+        return Right(either.right
+            .map((categoryDm) =>
+                categoryMapper.subCategorytoCategory(categoryDm))
+            .toList());
+      } else {
+        return Left(either.left);
+      }
+    } else {
+      return Left(ConnectionFailure(AppConstants.internetErrorMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Product>>> loadProductsByCategory(
+      String categoryId) async {
+    bool isConnected = await internetConnectionChecker.hasConnection;
+    if (isConnected) {
+      Either<Failure, List<ProductDM>> either =
+          await homeRemoteDataSource.loadProductsByCategory(categoryId);
+
+      if (either.isRight) {
         return Right(either.right
             .map((productDm) => productMapper.toProduct(productDm))
             .toList());

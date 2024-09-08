@@ -5,6 +5,8 @@ import 'package:ecommerce_app/features/main_layout/data/model/ProductsResponse.d
 import 'package:ecommerce_app/features/main_layout/data/model/categories_response.dart';
 import 'package:ecommerce_app/features/main_layout/data/model/category_dm.dart';
 import 'package:ecommerce_app/features/main_layout/data/model/product_dm.dart';
+import 'package:ecommerce_app/features/main_layout/data/model/sub_categories_response.dart';
+import 'package:ecommerce_app/features/main_layout/data/model/sub_category.dart';
 import 'package:ecommerce_app/features/main_layout/data/repository/home_repository/data_sources/home_remote_data_source.dart';
 import 'package:either_dart/src/either.dart';
 import 'package:injectable/injectable.dart';
@@ -39,6 +41,44 @@ class HomeRemoteDataSourceImpl extends HomeRemoteDataSource {
   Future<Either<Failure, List<ProductDM>>> loadProducts() async {
     try {
       Response serverResponse = await dio.get(productsUrl);
+      ProductsResponse productsResponse =
+          ProductsResponse.fromJson(serverResponse.data);
+      if (serverResponse.statusCode! >= 200 &&
+          serverResponse.statusCode! < 300) {
+        return Right(productsResponse.data!);
+      } else {
+        return Left(ApiFailure(AppConstants.defaultErrorMessage));
+      }
+    } catch (e) {
+      return Left(ApiFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<SubCategoryDM>>> loadSubCategories(
+      String categoryId) async {
+    try {
+      Response serverResponse =
+          await dio.get("/api/v1/categories/$categoryId/subcategories");
+      SubCategoriesResponse subCategoriesResponse =
+          SubCategoriesResponse.fromJson(serverResponse.data);
+      if (serverResponse.statusCode! >= 200 &&
+          serverResponse.statusCode! < 300) {
+        return Right(subCategoriesResponse.data!);
+      } else {
+        return Left(ApiFailure(AppConstants.defaultErrorMessage));
+      }
+    } catch (e) {
+      return Left(ApiFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ProductDM>>> loadProductsByCategory(
+      String categoryId) async {
+    try {
+      Response serverResponse = await dio
+          .get(productsUrl, queryParameters: {"category[in]": categoryId});
       ProductsResponse productsResponse =
           ProductsResponse.fromJson(serverResponse.data);
       if (serverResponse.statusCode! >= 200 &&

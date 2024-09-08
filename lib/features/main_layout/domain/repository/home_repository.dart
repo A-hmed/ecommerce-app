@@ -7,4 +7,9 @@ abstract class HomeRepository {
   Future<Either<Failure, List<Category>>> loadCategories();
 
   Future<Either<Failure, List<Product>>> loadProducts();
+
+  Future<Either<Failure, List<Product>>> loadProductsByCategory(
+      String categoryId);
+
+  Future<Either<Failure, List<Category>>> loadSubCategory(String categoryId);
 }
