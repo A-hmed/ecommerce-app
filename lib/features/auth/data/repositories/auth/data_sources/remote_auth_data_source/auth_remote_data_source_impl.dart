@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:ecommerce_app/features/auth/data/model/request/login_request.dart';
 import 'package:ecommerce_app/features/auth/data/model/response/auth_response.dart';
 import 'package:ecommerce_app/features/auth/data/repositories/auth/data_sources/remote_auth_data_source/auth_remote_data_source.dart';
+import 'package:ecommerce_app/features/base/data/utils/shared_pref_utls.dart';
 import 'package:ecommerce_app/features/base/failures/failures.dart';
 import 'package:either_dart/either.dart';
 import 'package:injectable/injectable.dart';
@@ -10,8 +11,9 @@ import 'package:injectable/injectable.dart';
 class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
   static const signInUrl = "/api/v1/auth/signin";
   Dio dio;
+  SharedPrefUtils sharedPrefUtils;
 
-  AuthRemoteDataSourceImpl(this.dio);
+  AuthRemoteDataSourceImpl(this.dio, this.sharedPrefUtils);
 
   @override
   Future<Either<Failure, void>> login(String email, String password) async {
@@ -21,6 +23,8 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
       AuthResponse myResponse = AuthResponse.fromJson(serverResponse.data);
       if (serverResponse.statusCode! >= 200 &&
           serverResponse.statusCode! <= 300) {
+        sharedPrefUtils.saveToken(myResponse.token!);
+        sharedPrefUtils.saveUser(myResponse.user!);
         return const Right(null);
       } else {
         return Left(ApiFailure());

@@ -10,6 +10,10 @@ class DioUtils {
   }
 }
 
+extension ResponseExtension on Response {
+  bool get isSuccessful => statusCode! >= 200 && statusCode! < 300;
+}
+
 class LoggingInterceptors extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {

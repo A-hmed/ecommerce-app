@@ -1,6 +1,13 @@
 import 'dart:async';
+
+import 'package:ecommerce_app/di/di.dart';
+import 'package:ecommerce_app/features/base/base_api_state.dart';
+import 'package:ecommerce_app/features/main_layout/domain/model/category.dart';
+import 'package:ecommerce_app/features/main_layout/home/presentation/cubit/home_cubit.dart';
+import 'package:ecommerce_app/features/main_layout/home/presentation/cubit/home_cubit_state.dart';
 import 'package:ecommerce_app/features/main_layout/home/presentation/widgets/custom_category_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/resources/assets_manager.dart';
@@ -23,10 +30,12 @@ class _HomeTabState extends State<HomeTab> {
     ImageAssets.carouselSlider2,
     ImageAssets.carouselSlider3,
   ];
+  HomeCubit cubit = getIt();
 
   @override
   void initState() {
     super.initState();
+    cubit.loadCategories();
     _startImageSwitching();
   }
 
@@ -57,19 +66,7 @@ class _HomeTabState extends State<HomeTab> {
           Column(
             children: [
               CustomSectionBar(sectionNname: 'Categories', function: () {}),
-              SizedBox(
-                height: 270.h,
-                child: GridView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return const CustomCategoryWidget();
-                  },
-                  itemCount: 20,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                  ),
-                ),
-              ),
+              buildCategoriesSection(),
               // SizedBox(height: 12.h),
               // CustomSectionBar(sectionNname: 'Brands', function: () {}),
               // SizedBox(
@@ -114,6 +111,39 @@ class _HomeTabState extends State<HomeTab> {
           )
         ],
       ),
+    );
+  }
+
+  Widget buildCategoriesSection() {
+    return BlocBuilder<HomeCubit, HomeCubitState>(
+      bloc: cubit,
+      builder: (context, state) {
+        if (state.categoriesApiState is BaseSuccessState) {
+          BaseSuccessState<List<Category>> successState =
+              state.categoriesApiState as BaseSuccessState<List<Category>>;
+          return SizedBox(
+            height: 280.h,
+            child: GridView.builder(
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, index) {
+                return CustomCategoryWidget(
+                  category: successState.data[index],
+                );
+              },
+              itemCount: successState.data.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+              ),
+            ),
+          );
+        } else if (state.categoriesApiState is BaseErrorState) {
+          BaseErrorState errorState =
+              state.categoriesApiState as BaseErrorState;
+          return ErrorWidget(errorState.failure.errorMessage);
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+      },
     );
   }
 }

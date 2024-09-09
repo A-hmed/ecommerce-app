@@ -25,6 +25,7 @@ dependencies:
   internet_connection_checker: ^1.0.0+1
   dio: ^5.6.0
   either_dart: ^1.0.0
+  shared_preferences: ^2.3.2
 
 dev_dependencies:
   flutter_test:
