@@ -8,6 +8,7 @@ import 'package:ecommerce_app/core/widget/custom_elevated_button.dart';
 import 'package:ecommerce_app/core/widget/main_text_field.dart';
 import 'package:ecommerce_app/core/widget/validators.dart';
 import 'package:ecommerce_app/features/auth/presentation/screens/sign_in/sign_in_viewmodel.dart';
+import 'package:ecommerce_app/features/cart/screens/cubit/cart_cubit.dart';
 import 'package:ecommerce_app/features/di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -45,6 +46,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
+    CartCubit cartCubit;
     return Scaffold(
       backgroundColor: ColorManager.primary,
       body: BlocListener<SignInViewModel, SignInViewModelState>(

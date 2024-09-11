@@ -5,6 +5,7 @@ import 'package:ecommerce_app/features/main_layout/ui/favourite/presentation/fav
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../cart/screens/cubit/cart_cubit.dart';
 import '../../di/di.dart';
 import 'categories/presentation/categories_tab.dart';
 import 'home/presentation/home_cubit/home_cubit.dart';
@@ -26,6 +27,13 @@ class _MainLayoutState extends State<MainLayout> {
     const FavouriteScreen(),
     const ProfileTab(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<CartCubit>(context).loadCart();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(

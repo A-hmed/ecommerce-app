@@ -6,6 +6,7 @@ import 'package:injectable/injectable.dart';
 class ProductMapper {
   Product toProduct(ProductDM productDm) {
     return Product(
+        id: productDm.id!,
         image: productDm.imageCover ?? "",
         title: productDm.title ?? "",
         price: productDm.price?.toDouble() ?? 0.0,

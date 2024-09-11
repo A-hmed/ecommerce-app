@@ -25,7 +25,7 @@ class ProductCounter extends StatelessWidget {
         children: [
           InkWell(
               onTap: () {
-                remove.call(productCounter);
+                remove.call(productCounter - 1);
               },
               child: Icon(
                 Icons.remove_circle_outline,
@@ -45,7 +45,7 @@ class ProductCounter extends StatelessWidget {
           ),
           InkWell(
               onTap: () {
-                add.call(productCounter);
+                add.call(productCounter + 1);
               },
               child: Icon(
                 Icons.add_circle_outline,

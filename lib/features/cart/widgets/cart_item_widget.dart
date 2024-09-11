@@ -22,16 +22,18 @@ class CartItemWidget extends StatelessWidget {
     required this.onIncrementTap,
     required this.onDecrementTap,
   });
+
   final String imagePath;
   final String title;
   final Color color;
   final String colorName;
   final int size;
-  final int price;
+  final double price;
   final void Function() onDeleteTap;
   final int quantity;
   final void Function(int value) onIncrementTap;
   final void Function(int value) onDecrementTap;
+
   @override
   Widget build(BuildContext context) {
     bool isPortrait =
@@ -41,6 +43,7 @@ class CartItemWidget extends StatelessWidget {
     return InkWell(
       onTap: () => Navigator.pushNamed(context, Routes.productDetails),
       child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
         height: isPortrait ? height * 0.14 : width * 0.23,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15.r),
@@ -54,7 +57,7 @@ class CartItemWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(15.r),
               border: Border.all(color: ColorManager.primary.withOpacity(0.3)),
             ),
-            child: Image.asset(
+            child: Image.network(
               imagePath,
               fit: BoxFit.cover,
               height: isPortrait ? height * 0.142 : height * 0.23,

@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:ecommerce_app/core/resources/assets_manager.dart';
 import 'package:ecommerce_app/core/utils/base_api_state.dart';
+import 'package:ecommerce_app/core/utils/dialog_utils.dart';
 import 'package:ecommerce_app/core/widget/product_card.dart';
+import 'package:ecommerce_app/features/cart/screens/cubit/cart_cubit.dart';
 import 'package:ecommerce_app/features/main_layout/domain/model/category.dart';
 import 'package:ecommerce_app/features/main_layout/domain/model/product.dart';
 import 'package:ecommerce_app/features/main_layout/ui/home/presentation/home_cubit/home_cubit.dart';
@@ -55,38 +57,48 @@ class _HomeTabState extends State<HomeTab> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          buildAds(),
-          Column(
-            children: [
-              CustomSectionBar(sectionNname: 'Categories', function: () {}),
-              buildCategoriesGridView(),
-              SizedBox(height: 12.h),
-              //CustomSectionBar(sectionNname: 'Brands', function: () {}),
-              // SizedBox(
-              //   height: 270.h,
-              //   child: GridView.builder(
-              //     scrollDirection: Axis.horizontal,
-              //     itemBuilder: (context, index) {
-              //       return const CustomBrandWidget();
-              //     },
-              //     itemCount: 20,
-              //     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              //       crossAxisCount: 2,
-              //     ),
-              //   ),
-              // ),
-              CustomSectionBar(
-                sectionNname: 'Most Selling Products',
-                function: () {},
-              ),
-              buildProductsListView(),
-              SizedBox(height: 12.h),
-            ],
-          )
-        ],
+    return BlocListener<CartCubit, BaseApiState>(
+      listener: (context, state) {
+        if (!context.mounted) return;
+        if (state is BaseLoadingState) {
+          showLoading(context);
+        } else {
+          hideLoading(context);
+        }
+      },
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            buildAds(),
+            Column(
+              children: [
+                CustomSectionBar(sectionNname: 'Categories', function: () {}),
+                buildCategoriesGridView(),
+                SizedBox(height: 12.h),
+                //CustomSectionBar(sectionNname: 'Brands', function: () {}),
+                // SizedBox(
+                //   height: 270.h,
+                //   child: GridView.builder(
+                //     scrollDirection: Axis.horizontal,
+                //     itemBuilder: (context, index) {
+                //       return const CustomBrandWidget();
+                //     },
+                //     itemCount: 20,
+                //     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                //       crossAxisCount: 2,
+                //     ),
+                //   ),
+                // ),
+                CustomSectionBar(
+                  sectionNname: 'Most Selling Products',
+                  function: () {},
+                ),
+                buildProductsListView(),
+                SizedBox(height: 12.h),
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

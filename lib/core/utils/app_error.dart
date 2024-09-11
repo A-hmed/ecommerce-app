@@ -1,3 +1,5 @@
+import 'package:ecommerce_app/core/resources/constants_manager.dart';
+
 class Failure {
   String errorMessage;
 
@@ -5,7 +7,7 @@ class Failure {
 }
 
 class ConnectionFailure extends Failure {
-  ConnectionFailure(super.errorMessage);
+  ConnectionFailure([super.errorMessage = AppConstants.internetErrorMessage]);
 }
 
 class ServerFailure extends Failure {
@@ -13,5 +15,5 @@ class ServerFailure extends Failure {
 }
 
 class ApiFailure extends Failure {
-  ApiFailure(super.errorMessage);
+  ApiFailure([super.errorMessage = AppConstants.defaultErrorMessage]);
 }

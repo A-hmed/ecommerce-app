@@ -25,7 +25,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // print("2");
       cubit.loadProducts(categoryId);
     });
   }
@@ -36,7 +35,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
         .of(context)!
         .settings
         .arguments as String;
-    print("1");
     return Scaffold(
       appBar: const HomeScreenAppBar(
         automaticallyImplyLeading: true,

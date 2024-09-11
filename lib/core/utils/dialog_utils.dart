@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+bool isDialogShown = false;
 showLoading(BuildContext context) {
+  isDialogShown = true;
   showDialog(
       context: context,
       barrierDismissible: false,
@@ -19,6 +21,10 @@ showLoading(BuildContext context) {
 }
 
 hideLoading(BuildContext context) {
+  if (isDialogShown == false) {
+    return;
+  }
+  isDialogShown = false;
   Navigator.pop(context);
 }
 
@@ -29,6 +35,7 @@ showMessage(BuildContext context,
     String? negButtonTitle,
     Function? onPosButtonClick,
     Function? onNegButtonClick}) {
+  isDialogShown = true;
   showDialog(
       context: context,
       builder: (_) {
