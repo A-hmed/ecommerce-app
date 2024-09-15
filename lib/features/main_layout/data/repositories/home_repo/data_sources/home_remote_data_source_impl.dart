@@ -35,9 +35,13 @@ class HomeRemoteDataSourceImpl extends HomeRemoteDataSource {
   }
 
   @override
-  Future<Either<Failure, List<ProductDM>>> getProducts() async {
+  Future<Either<Failure, List<ProductDM>>> getProducts(
+      [String? category]) async {
     try {
-      Response serverResponse = await dio.get(_productsEndPoint);
+      Map<String, String>? queryParameters =
+          category != null ? {"category[in]": category} : null;
+      Response serverResponse =
+          await dio.get(_productsEndPoint, queryParameters: queryParameters);
       if (serverResponse.isSuccessful) {
         ProductsResponse productsResponse =
             ProductsResponse.fromJson(serverResponse.data);
@@ -47,6 +51,25 @@ class HomeRemoteDataSourceImpl extends HomeRemoteDataSource {
       }
     } catch (e) {
       print("Exception while calling getProducts e: ${e}");
+      return Left(ApiFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<CategoryDM>>> getSubCategories(
+      String categoryId) async {
+    try {
+      Response serverResponse =
+          await dio.get("/api/v1/categories/$categoryId/subcategories");
+      if (serverResponse.isSuccessful) {
+        CategoriesResponse categoriesResponse =
+            CategoriesResponse.fromJson(serverResponse.data);
+        return Right(categoriesResponse.data!);
+      } else {
+        return Left(ApiFailure());
+      }
+    } catch (e) {
+      print("Exception while calling getCategories e: ${e}");
       return Left(ApiFailure());
     }
   }

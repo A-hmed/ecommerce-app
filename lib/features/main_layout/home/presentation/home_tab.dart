@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:ecommerce_app/di/di.dart';
 import 'package:ecommerce_app/features/base/base_api_state.dart';
 import 'package:ecommerce_app/features/main_layout/domain/model/category.dart';
+import 'package:ecommerce_app/features/main_layout/domain/model/product.dart';
 import 'package:ecommerce_app/features/main_layout/home/presentation/cubit/home_cubit.dart';
 import 'package:ecommerce_app/features/main_layout/home/presentation/cubit/home_cubit_state.dart';
 import 'package:ecommerce_app/features/main_layout/home/presentation/widgets/custom_category_widget.dart';
@@ -11,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/resources/assets_manager.dart';
+import '../../../../core/widget/product_card.dart';
 import 'widgets/custom_ads_widget.dart';
 import 'widgets/custom_section_bar.dart';
 
@@ -30,28 +31,14 @@ class _HomeTabState extends State<HomeTab> {
     ImageAssets.carouselSlider2,
     ImageAssets.carouselSlider3,
   ];
-  HomeCubit cubit = getIt();
+  late HomeCubit cubit = BlocProvider.of(context);
 
   @override
   void initState() {
     super.initState();
-    cubit.loadCategories();
     _startImageSwitching();
   }
 
-  void _startImageSwitching() {
-    _timer = Timer.periodic(const Duration(milliseconds: 2500), (Timer timer) {
-      setState(() {
-        _currentIndex = (_currentIndex + 1) % adsImages.length;
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,50 +54,47 @@ class _HomeTabState extends State<HomeTab> {
             children: [
               CustomSectionBar(sectionNname: 'Categories', function: () {}),
               buildCategoriesSection(),
-              // SizedBox(height: 12.h),
-              // CustomSectionBar(sectionNname: 'Brands', function: () {}),
-              // SizedBox(
-              //   height: 270.h,
-              //   child: GridView.builder(
-              //     scrollDirection: Axis.horizontal,
-              //     itemBuilder: (context, index) {
-              //       return const CustomBrandWidget();
-              //     },
-              //     itemCount: 20,
-              //     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              //       crossAxisCount: 2,
-              //     ),
-              //   ),
-              // ),
-              // CustomSectionBar(
-              //   sectionNname: 'Most Selling Products',
-              //   function: () {},
-              // ),
-              // SizedBox(
-              //   child: SizedBox(
-              //     height: 360.h,
-              //     child: ListView.builder(
-              //       scrollDirection: Axis.horizontal,
-              //       itemBuilder: (context, index) {
-              //         return const ProductCard(
-              //           title: "Nike Air Jordon",
-              //           description:
-              //               "Nike is a multinational corporation that designs, develops, and sells athletic footwear ,apparel, and accessories",
-              //           rating: 4.5,
-              //           price: 1100,
-              //           priceBeforeDiscound: 1500,
-              //           image: ImageAssets.categoryHomeImage,
-              //         );
-              //       },
-              //       itemCount: 20,
-              //     ),
-              //   ),
-              // ),
+              CustomSectionBar(
+                sectionNname: 'Most Selling Products',
+                function: () {},
+              ),
+              buildProductsList(),
               SizedBox(height: 12.h),
             ],
           )
         ],
       ),
+    );
+  }
+
+  Widget buildProductsList() {
+    return BlocBuilder<HomeCubit, HomeCubitState>(
+      bloc: cubit,
+      builder: (context, state) {
+        if (state.productApiState is BaseSuccessState<List<Product>>) {
+          List<Product> products =
+              (state.productApiState as BaseSuccessState<List<Product>>).data;
+          return SizedBox(
+            child: SizedBox(
+              height: 360.h,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) {
+                  return ProductCard(
+                    product: products[index],
+                  );
+                },
+                itemCount: 20,
+              ),
+            ),
+          );
+        } else if (state.productApiState is BaseErrorState) {
+          return ErrorWidget(
+              (state.productApiState as BaseErrorState).failure.errorMessage);
+        } else {
+          return Center(child: CircularProgressIndicator());
+        }
+      },
     );
   }
 
@@ -145,5 +129,19 @@ class _HomeTabState extends State<HomeTab> {
         }
       },
     );
+  }
+
+  void _startImageSwitching() {
+    _timer = Timer.periodic(const Duration(milliseconds: 2500), (Timer timer) {
+      setState(() {
+        _currentIndex = (_currentIndex + 1) % adsImages.length;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 }

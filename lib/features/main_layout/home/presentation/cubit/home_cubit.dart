@@ -4,6 +4,7 @@ import 'package:ecommerce_app/features/main_layout/domain/model/category.dart';
 import 'package:ecommerce_app/features/main_layout/domain/model/product.dart';
 import 'package:ecommerce_app/features/main_layout/domain/usecase/get_categories_usecase.dart';
 import 'package:ecommerce_app/features/main_layout/domain/usecase/get_product_usecase.dart';
+import 'package:ecommerce_app/features/main_layout/domain/usecase/get_sub_categories_by_category_usecase.dart';
 import 'package:ecommerce_app/features/main_layout/home/presentation/cubit/home_cubit_state.dart';
 import 'package:either_dart/either.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,8 +14,10 @@ import 'package:injectable/injectable.dart';
 class HomeCubit extends Cubit<HomeCubitState> {
   final GetCategoriesUseCase _getCategoriesUseCase;
   final GetProductsUseCase _getProductsUseCase;
+  final GetSubCategoriesByCategoryUseCase _getSubCategoriesByCategoryUseCase;
 
-  HomeCubit(this._getCategoriesUseCase, this._getProductsUseCase)
+  HomeCubit(this._getCategoriesUseCase, this._getProductsUseCase,
+      this._getSubCategoriesByCategoryUseCase)
       : super(HomeCubitState.initial());
 
   void loadCategories() async {
@@ -22,9 +25,23 @@ class HomeCubit extends Cubit<HomeCubitState> {
     Either<Failure, List<Category>> either =
         await _getCategoriesUseCase.execute();
     if (either.isRight) {
-      emit(state.copyWith(categoriesApiState: BaseSuccessState(either.right)));
+      emit(state.copyWith(
+          categoriesApiState: BaseSuccessState(either.right),
+          selectedCategory: either.right[0]));
     } else {
       emit(state.copyWith(categoriesApiState: BaseErrorState(either.left)));
+    }
+  }
+
+  void loadSubCategoriesByCategory(String categoryId) async {
+    emit(state.copyWith(subCategoriesApiState: BaseLoadingState()));
+    Either<Failure, List<Category>> either =
+        await _getSubCategoriesByCategoryUseCase.execute(categoryId);
+    if (either.isRight) {
+      emit(state.copyWith(
+          subCategoriesApiState: BaseSuccessState(either.right)));
+    } else {
+      emit(state.copyWith(subCategoriesApiState: BaseErrorState(either.left)));
     }
   }
 
@@ -36,5 +53,10 @@ class HomeCubit extends Cubit<HomeCubitState> {
     } else {
       emit(state.copyWith(productApiState: BaseErrorState(either.left)));
     }
+  }
+
+  void setSelectedCategory(Category category) {
+    emit(state.copyWith(selectedCategory: category));
+    loadSubCategoriesByCategory(category.id);
   }
 }

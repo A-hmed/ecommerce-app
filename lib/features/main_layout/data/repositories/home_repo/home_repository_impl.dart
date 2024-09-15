@@ -38,12 +38,28 @@ class HomeRepositoryImpl extends HomeRepository {
   }
 
   @override
-  Future<Either<Failure, List<Product>>> getProducts() async {
+  Future<Either<Failure, List<Product>>> getProducts([String? category]) async {
     if (await internetConnectionChecker.hasConnection) {
       Either<Failure, List<ProductDM>> either =
-          await homeRemoteDataSource.getProducts();
+          await homeRemoteDataSource.getProducts(category);
       if (either.isRight) {
         return Right(productMapper.toProducts(either.right));
+      } else {
+        return Left(either.left);
+      }
+    } else {
+      return Left(ConnectionFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Category>>> getSubCategories(
+      String categoryId) async {
+    if (await internetConnectionChecker.hasConnection) {
+      Either<Failure, List<CategoryDM>> either =
+          await homeRemoteDataSource.getSubCategories(categoryId);
+      if (either.isRight) {
+        return Right(categoryMapper.toCategories(either.right));
       } else {
         return Left(either.left);
       }

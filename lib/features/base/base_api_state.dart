@@ -16,4 +16,9 @@ class BaseErrorState extends BaseApiState {
   Failure failure;
 
   BaseErrorState(this.failure);
+
+  @override
+  String toString() {
+    return failure.errorMessage;
+  }
 }

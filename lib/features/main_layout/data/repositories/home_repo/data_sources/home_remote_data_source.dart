@@ -6,5 +6,7 @@ import 'package:either_dart/either.dart';
 abstract class HomeRemoteDataSource {
   Future<Either<Failure, List<CategoryDM>>> getCategories();
 
-  Future<Either<Failure, List<ProductDM>>> getProducts();
+  Future<Either<Failure, List<ProductDM>>> getProducts([String? category]);
+
+  Future<Either<Failure, List<CategoryDM>>> getSubCategories(String categoryId);
 }

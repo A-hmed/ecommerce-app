@@ -7,5 +7,7 @@ import '../model/product.dart';
 abstract class HomeRepository {
   Future<Either<Failure, List<Category>>> getCategories();
 
-  Future<Either<Failure, List<Product>>> getProducts();
+  Future<Either<Failure, List<Category>>> getSubCategories(String categoryId);
+
+  Future<Either<Failure, List<Product>>> getProducts([String? category]);
 }

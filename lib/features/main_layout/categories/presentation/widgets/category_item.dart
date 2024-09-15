@@ -2,23 +2,24 @@ import 'package:ecommerce_app/core/resources/color_manager.dart';
 import 'package:ecommerce_app/core/resources/font_manager.dart';
 import 'package:ecommerce_app/core/resources/styles_manager.dart';
 import 'package:ecommerce_app/core/resources/values_manager.dart';
+import 'package:ecommerce_app/features/main_layout/domain/model/category.dart';
 import 'package:flutter/material.dart';
 
 class CategoryItem extends StatelessWidget {
+  final Category category;
   final int index;
-  final String title;
-
   final bool isSelected;
   final Function onItemClick;
 
-  const CategoryItem(this.index, this.title, this.isSelected, this.onItemClick,
+  const CategoryItem(
+      this.index, this.category, this.isSelected, this.onItemClick,
       {super.key});
 
   @override
   Widget build(BuildContext context) {
     // Handle item click by calling onItemClick callback
     return InkWell(
-      onTap: () => onItemClick(index),
+      onTap: () => onItemClick(category, index),
       child: Container(
         // Set background color based on selection
         color: isSelected?ColorManager.white:Colors.transparent,
@@ -43,7 +44,7 @@ class CategoryItem extends StatelessWidget {
               padding: const EdgeInsets.symmetric(
                   vertical: AppPadding.p16, horizontal: AppPadding.p8),
               child: Text(
-                title,
+                category.name,
                 textAlign: TextAlign.start,
                 style: getMediumStyle(
                     color: ColorManager.primary, fontSize: FontSize.s14),

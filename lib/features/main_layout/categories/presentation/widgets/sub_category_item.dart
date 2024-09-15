@@ -1,19 +1,18 @@
 import 'package:ecommerce_app/core/resources/color_manager.dart';
 import 'package:ecommerce_app/core/resources/styles_manager.dart';
 import 'package:ecommerce_app/core/resources/values_manager.dart';
-import 'package:ecommerce_app/core/routes_manager/routes.dart';
 import 'package:flutter/material.dart';
 
 class SubCategoryItem extends StatelessWidget {
   final String title;
   final String image;
-  final Function navigation;
+  final void Function() navigation;
   const SubCategoryItem(this.title, this.image, this.navigation, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Navigator.pushNamed(context, Routes.productsScreenRoute),
+      onTap: () => navigation(),
       overlayColor: WidgetStateProperty.all(Colors.transparent),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -35,6 +34,9 @@ class SubCategoryItem extends StatelessWidget {
           ),
           Text(
             title,
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: getRegularStyle(color: ColorManager.primary),
           )
         ],
