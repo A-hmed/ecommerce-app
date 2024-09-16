@@ -2,6 +2,7 @@ import 'package:ecommerce_app/core/resources/assets_manager.dart';
 import 'package:ecommerce_app/core/resources/color_manager.dart';
 import 'package:ecommerce_app/core/widget/home_screen_app_bar.dart';
 import 'package:ecommerce_app/di/di.dart';
+import 'package:ecommerce_app/features/cart/screens/cubit/cart_cubit.dart';
 import 'package:ecommerce_app/features/main_layout/categories/presentation/categories_tab.dart';
 import 'package:ecommerce_app/features/main_layout/favourite/presentation/favourite_screen.dart';
 import 'package:ecommerce_app/features/main_layout/home/presentation/cubit/home_cubit.dart';
@@ -26,6 +27,12 @@ class _MainLayoutState extends State<MainLayout> {
     const FavouriteScreen(),
     const ProfileTab(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<CartCubit>(context).loadUserCart();
+  }
 
   @override
   Widget build(BuildContext context) {

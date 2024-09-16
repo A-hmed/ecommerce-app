@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:ecommerce_app/core/widget/dialog_utils.dart';
 import 'package:ecommerce_app/features/base/base_api_state.dart';
+import 'package:ecommerce_app/features/cart/screens/cubit/cart_cubit.dart';
 import 'package:ecommerce_app/features/main_layout/domain/model/category.dart';
 import 'package:ecommerce_app/features/main_layout/domain/model/product.dart';
 import 'package:ecommerce_app/features/main_layout/home/presentation/cubit/home_cubit.dart';
@@ -32,11 +34,20 @@ class _HomeTabState extends State<HomeTab> {
     ImageAssets.carouselSlider3,
   ];
   late HomeCubit cubit = BlocProvider.of(context);
+  late CartCubit cartCubit = BlocProvider.of(context);
 
   @override
   void initState() {
     super.initState();
     _startImageSwitching();
+    cartCubit.subscription = cartCubit.stream.listen((state) {
+      print("45- Listener: ${state}");
+      if (state is BaseLoadingState) {
+        showLoading(context);
+      } else {
+        hideLoading(context);
+      }
+    });
   }
 
 
@@ -84,7 +95,7 @@ class _HomeTabState extends State<HomeTab> {
                     product: products[index],
                   );
                 },
-                itemCount: 20,
+                itemCount: products.length,
               ),
             ),
           );
@@ -142,6 +153,7 @@ class _HomeTabState extends State<HomeTab> {
   @override
   void dispose() {
     _timer.cancel();
+    print("158- Dispose");
     super.dispose();
   }
 }

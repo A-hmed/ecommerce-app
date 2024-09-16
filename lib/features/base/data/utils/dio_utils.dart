@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:ecommerce_app/features/base/data/utils/shared_pref_utls.dart';
 
 ///https://ecommerce.routemisr.com
 class DioUtils {
@@ -6,6 +7,7 @@ class DioUtils {
     Dio dio = Dio();
     dio.options.baseUrl = "https://ecommerce.routemisr.com";
     dio.interceptors.add(LoggingInterceptors());
+    dio.interceptors.add(AuthInterceptors(SharedPrefUtils()));
     return dio;
   }
 }
@@ -32,5 +34,18 @@ class LoggingInterceptors extends Interceptor {
     print(
         'ERROR[${err.response?.statusCode}] => PATH: ${err.requestOptions.path}');
     super.onError(err, handler);
+  }
+}
+
+class AuthInterceptors extends Interceptor {
+  SharedPrefUtils sharedPrefUtils;
+
+  AuthInterceptors(this.sharedPrefUtils);
+
+  @override
+  void onRequest(
+      RequestOptions options, RequestInterceptorHandler handler) async {
+    options.headers = {"token": await sharedPrefUtils.getToken()};
+    super.onRequest(options, handler);
   }
 }

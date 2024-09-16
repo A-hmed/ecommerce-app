@@ -5,7 +5,13 @@ class Category {
     required this.image,
   });
 
-  String id;
-  String name;
-  String image;
+  Category.empty() {
+    id = "";
+    name = "";
+    image = "";
+  }
+
+  late String id;
+  late String name;
+  late String image;
 }

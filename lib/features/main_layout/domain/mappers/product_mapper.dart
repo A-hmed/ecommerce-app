@@ -15,7 +15,7 @@ class ProductMapper {
     return Product(
       sold: productDM.sold ?? 0,
       images: productDM.images ?? [],
-      subcategory: categoryMapper.toCategories(productDM.subcategory ?? []),
+      subCategories: categoryMapper.toCategories(productDM.subcategory ?? []),
       ratingsQuantity: productDM.ratingsQuantity ?? 0,
       id: productDM.id!,
       title: productDM.title ?? '',

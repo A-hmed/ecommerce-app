@@ -5,11 +5,13 @@ import 'package:ecommerce_app/core/widget/custom_elevated_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class TotalPriceAndCheckoutBotton extends StatelessWidget {
-  const TotalPriceAndCheckoutBotton(
+class TotalPriceAndCheckoutButton extends StatelessWidget {
+  const TotalPriceAndCheckoutButton(
       {super.key, required this.totalPrice, required this.checkoutButtonOnTap});
-  final int totalPrice;
+
+  final num totalPrice;
   final void Function() checkoutButtonOnTap;
+
   @override
   Widget build(BuildContext context) {
     return Row(

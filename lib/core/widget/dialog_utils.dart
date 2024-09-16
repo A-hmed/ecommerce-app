@@ -1,6 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+isThereCurrentDialogShowing(BuildContext context) =>
+    ModalRoute
+        .of(context)
+        ?.isCurrent != true;
+
 showLoading(BuildContext context) {
   showDialog(
       context: context,
@@ -19,6 +24,7 @@ showLoading(BuildContext context) {
 }
 
 hideLoading(BuildContext context) {
+  if (!isThereCurrentDialogShowing(context)) return;
   Navigator.pop(context);
 }
 

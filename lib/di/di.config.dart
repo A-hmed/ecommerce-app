@@ -24,6 +24,15 @@ import '../features/auth/domain/repositories/auth_repository.dart' as _i869;
 import '../features/auth/presentation/screens/sign_in/sign_in_cubit.dart'
     as _i890;
 import '../features/base/data/utils/shared_pref_utls.dart' as _i4;
+import '../features/cart/data/repository/cart/cart_repoistory_impl.dart'
+as _i577;
+import '../features/cart/data/repository/cart/data_sources/cart_remote_data_source.dart'
+as _i810;
+import '../features/cart/data/repository/cart/data_sources/cart_remote_data_source_impl.dart'
+as _i154;
+import '../features/cart/domain/mappers/cart_mapper.dart' as _i319;
+import '../features/cart/domain/repository/cart_repository.dart' as _i491;
+import '../features/cart/screens/cubit/cart_cubit.dart' as _i266;
 import '../features/main_layout/data/repositories/home_repo/data_sources/home_remote_data_source.dart'
     as _i968;
 import '../features/main_layout/data/repositories/home_repo/data_sources/home_remote_data_source_impl.dart'
@@ -71,14 +80,25 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i361.Dio>(),
           gh<_i4.SharedPrefUtils>(),
         ));
+    gh.factory<_i810.CartRemoteDataSource>(
+        () => _i154.CartRemoteDataSourceImpl(gh<_i361.Dio>()));
     gh.factory<_i648.ProductMapper>(
         () => _i648.ProductMapper(gh<_i415.CategoryMapper>()));
+    gh.factory<_i319.CartMapper>(
+        () => _i319.CartMapper(gh<_i415.CategoryMapper>()));
+    gh.factory<_i491.CartRepository>(() => _i577.CartRepositoryImpl(
+          gh<_i973.InternetConnectionChecker>(),
+          gh<_i810.CartRemoteDataSource>(),
+          gh<_i319.CartMapper>(),
+        ));
     gh.factory<_i833.HomeRepository>(() => _i76.HomeRepositoryImpl(
           gh<_i968.HomeRemoteDataSource>(),
           gh<_i973.InternetConnectionChecker>(),
           gh<_i415.CategoryMapper>(),
           gh<_i648.ProductMapper>(),
         ));
+    gh.factory<_i266.CartCubit>(
+        () => _i266.CartCubit(gh<_i491.CartRepository>()));
     gh.factory<_i869.AuthRepository>(() => _i986.AuthRepositoryImpl(
           gh<_i633.AuthRemoteDataSource>(),
           gh<_i973.InternetConnectionChecker>(),

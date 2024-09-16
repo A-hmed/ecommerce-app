@@ -4,7 +4,7 @@ class Product {
   Product({
     required this.sold,
     required this.images,
-    required this.subcategory,
+    required this.subCategories,
     required this.ratingsQuantity,
     required this.id,
     required this.title,
@@ -15,11 +15,13 @@ class Product {
     required this.category,
     required this.brand,
     required this.ratingsAverage,
+    this.totalCartPrice = 0,
+    this.totalItemsInCart = 0,
   });
 
   final num sold;
   final List<String> images;
-  final List<Category> subcategory;
+  final List<Category> subCategories;
   final num ratingsQuantity;
   final String id;
   final String title;
@@ -30,4 +32,6 @@ class Product {
   final Category category;
   final Category brand;
   final num ratingsAverage;
+  final num totalCartPrice;
+  final num totalItemsInCart;
 }
