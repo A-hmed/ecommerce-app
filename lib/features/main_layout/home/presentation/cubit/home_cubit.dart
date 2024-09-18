@@ -20,14 +20,15 @@ class HomeCubit extends Cubit<HomeCubitState> {
       this._getSubCategoriesByCategoryUseCase)
       : super(HomeCubitState.initial());
 
-  void loadCategories() async {
+  Future<void> loadCategories() async {
     emit(state.copyWith(categoriesApiState: BaseLoadingState()));
     Either<Failure, List<Category>> either =
         await _getCategoriesUseCase.execute();
+
     if (either.isRight) {
       emit(state.copyWith(
           categoriesApiState: BaseSuccessState(either.right),
-          selectedCategory: either.right[0]));
+          selectedCategory: either.right.isNotEmpty ? either.right[0] : null));
     } else {
       emit(state.copyWith(categoriesApiState: BaseErrorState(either.left)));
     }
